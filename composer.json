@@ -1,0 +1,68 @@
+{
+    "name": "bishopm/bible",
+    "type": "library",
+    "description": "Laravel-based bible site",
+    "keywords": [
+        "bible"
+    ],
+    "homepage": "https://github.com/bishopm/bible",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Bishop",
+            "email": "michael@goodworx.co.za",
+            "homepage": "https://github.com/bishopm",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "illuminate/support": "5.6.*",
+        "jeroennoten/laravel-adminlte":"1.*",
+        "laravelcollective/html": "5.6.*",
+        "laravel/socialite": "3.*",
+        "laracasts/flash": "3.*",
+        "cartalyst/tags": "6.*",
+        "jrean/laravel-user-verification": "dev-master",
+        "guzzlehttp/guzzle": "6.*",
+        "spatie/laravel-permission": "2.*",
+        "tymon/jwt-auth": "1.*",
+        "barryvdh/laravel-cors": "0.11.*",
+        "pusher/pusher-php-server": "3.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "~6.0",        
+        "squizlabs/php_codesniffer": "^2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bishopm\\Bible\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "bishopm\\bible\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
+        "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
+        "post-install-cmd": [
+            "ln -sr storage/app/public public/storage"
+        ],
+        "post-package-update": [
+            "php artisan vendor:publish",
+            "php artisan migrate"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bishopm\\Bible\\Providers\\BibleServiceProvider"
+            ]
+        }
+    }
+}
