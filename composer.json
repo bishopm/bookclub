@@ -1,11 +1,11 @@
 {
-    "name": "bishopm/bible",
+    "name": "bishopm/bookclub",
     "type": "library",
-    "description": "Laravel-based bible site",
+    "description": "Laravel-based bookclub site",
     "keywords": [
-        "bible"
+        "bookclub"
     ],
-    "homepage": "https://github.com/bishopm/bible",
+    "homepage": "https://github.com/bishopm/bookclub",
     "license": "MIT",
     "authors": [
         {
@@ -35,12 +35,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Bishopm\\Bible\\": "src"
+            "Bishopm\\Bookclub\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "bishopm\\bible\\": "tests"
+            "bishopm\\bookclub\\": "tests"
         }
     },
     "scripts": {
@@ -61,7 +61,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Bishopm\\Bible\\Providers\\BibleServiceProvider"
+                "Bishopm\\Bookclub\\Providers\\BookclubServiceProvider"
             ]
         }
     }
