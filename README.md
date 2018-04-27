@@ -13,7 +13,8 @@ sudo chmod -R 777 storage
 sudo chmod -R 777 bootstrap
 ```
 3. Check the Laravel installation is running properly before proceeding. 
-4. Add the bible package to composer.json 
+4. Add the bookclub package to composer.json 
 5. Run *composer update* in the project folder, which will pull in the package and its dependencies
 6. Add your database credentials to .env
-7. Add Bishopm\Bible\Providers\BibleServiceProvider::class at the bottom of the list of providers in config/app.php (We're not using Laravel's package auto-discovery at the moment because it creates problems with some of the package routes)
+
+Still early days for this package - under heavy development
