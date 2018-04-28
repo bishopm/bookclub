@@ -18,6 +18,7 @@ class CreateLoansTable extends Migration
             $table->integer('user_id');
             $table->date('loandate');
             $table->date('returndate')->nullable();
+            $table->Timestamps();
         });
     }
 

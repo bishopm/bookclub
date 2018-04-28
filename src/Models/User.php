@@ -7,7 +7,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Actuallymab\LaravelComment\CanComment;
 use Bishopm\Bookclub\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Activitylog\Traits\CausesActivity;
 use Bishopm\Bookclub\Models\Setting;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
@@ -17,7 +16,6 @@ class User extends Authenticatable implements JWTSubject
     use Notifiable;
     use CanComment;
     use SoftDeletes;
-    use CausesActivity;
     use HasRoles;
 
     protected $dates = ['deleted_at'];
@@ -25,11 +23,6 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password', 'remember_token',
     ];
-
-    public function individual()
-    {
-        return $this->belongsTo('Bishopm\Bookclub\Models\Individual');
-    }
 
     public function sendPasswordResetNotification($token)
     {
@@ -44,11 +37,6 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public function posts()
-    {
-        return $this->hasMany('Bishopm\Bookclub\Models\Post');
-    }
-
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -59,8 +47,13 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function rosters()
+    public function books()
     {
-        return $this->belongsToMany('Bishopm\Bookclub\Models\Roster');
+        return $this->hasMany('Bishopm\Bookclub\Models\Book');
+    }
+
+    public function loans()
+    {
+        return $this->hasMany('Bishopm\Bookclub\Models\Loan');
     }
 }

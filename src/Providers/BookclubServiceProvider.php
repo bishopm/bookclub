@@ -71,17 +71,37 @@ class BookclubServiceProvider extends ServiceProvider
     private function registerBindings()
     {
         $this->app->bind(
-            'Bishopm\Bookclub\Repositories\ActionsRepository',
+            'Bishopm\Bookclub\Repositories\AuthorsRepository',
             function () {
-                $repository = new \Bishopm\Bookclub\Repositories\ActionsRepository(new \Bishopm\Bookclub\Models\Action());
+                $repository = new \Bishopm\Bookclub\Repositories\AuthorsRepository(new \Bishopm\Bookclub\Models\Author());
                 return $repository;
             }
         );
-
+        $this->app->bind(
+            'Bishopm\Bookclub\Repositories\BooksRepository',
+            function () {
+                $repository = new \Bishopm\Bookclub\Repositories\BooksRepository(new \Bishopm\Bookclub\Models\Book());
+                return $repository;
+            }
+        );
+        $this->app->bind(
+            'Bishopm\Bookclub\Repositories\LoansRepository',
+            function () {
+                $repository = new \Bishopm\Bookclub\Repositories\LoansRepository(new \Bishopm\Bookclub\Models\Loan());
+                return $repository;
+            }
+        );
         $this->app->bind(
             'Bishopm\Bookclub\Repositories\SettingsRepository',
             function () {
                 $repository = new \Bishopm\Bookclub\Repositories\SettingsRepository(new \Bishopm\Bookclub\Models\Setting());
+                return $repository;
+            }
+        );
+        $this->app->bind(
+            'Bishopm\Bookclub\Repositories\UsersRepository',
+            function () {
+                $repository = new \Bishopm\Bookclub\Repositories\UsersRepository(new \Bishopm\Bookclub\Models\User());
                 return $repository;
             }
         );
