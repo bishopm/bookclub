@@ -29,7 +29,7 @@
         "barryvdh/laravel-cors": "0.11.*",
         "pusher/pusher-php-server": "3.*",
         "actuallymab/laravel-comment": "0.5.*",
-        "google/api-client": "2.*"
+        "google/apiclient": "2.*"
     },
     "require-dev": {
         "phpunit/phpunit" : "~6.0",        
