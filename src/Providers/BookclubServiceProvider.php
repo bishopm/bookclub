@@ -29,11 +29,18 @@ class BookclubServiceProvider extends ServiceProvider
         Schema::defaultStringLength(255);
         if (! $this->app->routesAreCached()) {
             require __DIR__.'/../Http/api.routes.php';
+            require __DIR__.'/../Http/web.routes.php';
         }
         $this->loadViewsFrom(__DIR__.'/../Resources/views', 'bookclub');
         $this->loadMigrationsFrom(__DIR__.'/../Database/migrations');
         $this->publishes([__DIR__.'/../Assets' => public_path('vendor/bishopm'),], 'public');
         config(['auth.providers.users.model'=>'Bishopm\Bookclub\Models\User']);
+        config(['services.facebook.client_id'=> 'fbid']);
+        config(['services.facebook.client_secret'=> 'fbsecret']);
+        config(['services.facebook.redirect'=> 'fbredirect']);
+        config(['services.google.client_id'=> '515373439888-fo6i9e0dabkiajml7ussult21fld9g82.apps.googleusercontent.com']);
+        config(['services.google.client_secret'=> 'J9L6D-IXdxUJTY0Vx_RDqxlJ']);
+        config(['services.google.redirect'=> 'http://localhost/bookclub/public/login/google/callback']);
         if (Schema::hasTable('settings')) {
             /*$finset=$settings->makearray();
             if (($settings->getkey('site_name'))<>"Invalid") {
