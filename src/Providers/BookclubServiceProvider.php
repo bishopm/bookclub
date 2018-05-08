@@ -29,7 +29,6 @@ class BookclubServiceProvider extends ServiceProvider
         Schema::defaultStringLength(255);
         if (! $this->app->routesAreCached()) {
             require __DIR__.'/../Http/api.routes.php';
-            require __DIR__.'/../Http/web.routes.php';
         }
         $this->loadViewsFrom(__DIR__.'/../Resources/views', 'bookclub');
         $this->loadMigrationsFrom(__DIR__.'/../Database/migrations');

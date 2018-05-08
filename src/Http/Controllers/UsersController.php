@@ -5,6 +5,7 @@ namespace Bishopm\Bookclub\Http\Controllers;
 use Auth;
 use JWTAuth;
 use Bishopm\Bookclub\Models\User;
+use Bishopm\Bookclub\Models\LinkedSocialAccount;
 use Bishopm\Bookclub\Repositories\UsersRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
@@ -30,6 +31,25 @@ class UsersController extends Controller
     public function index()
     {
         return $this->user->all();
+    }
+
+    /**
+     * Login or create user
+     *
+     * @return Response
+     */
+    public function login(Request $request)
+    {
+        $account = LinkedSocialAccount::where('provider_name', $request->provider)->where('provider_id', $request->provider_id)->first();
+        if ($account) {
+            return User::with('accounts')->find($account->user_id);
+        } else {
+            $user = User::create(['name' => $request->name, 'authorised'=>0]);
+            $user->image = $request->image;
+            $user->save();
+            $user->accounts()->create(['provider_name'=>$request->provider,'provider_id'=>$request->provider_id]);
+            return $user;
+        }
     }
 
     /**
@@ -64,6 +84,17 @@ class UsersController extends Controller
     public function update(User $user, Request $request)
     {
         $user = $this->user->update($user, $request->all());
+        return $user;
+    }
+
+    public function authorise($id, Request $request)
+    {
+        $user = User::find($id);
+        if ($request->action == "authorise") {
+            return $this->user->update($user, ['authorised'=>1]);
+        } elseif ($request->action == "delete") {
+            return "deleting";
+        }
         return $user;
     }
 

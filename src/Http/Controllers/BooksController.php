@@ -5,6 +5,8 @@ namespace Bishopm\Bookclub\Http\Controllers;
 use Auth;
 use JWTAuth;
 use Bishopm\Bookclub\Models\Book;
+use Bishopm\Bookclub\Models\User;
+use Actuallymab\LaravelComment\Models\Comment;
 use Bishopm\Bookclub\Repositories\AuthorsRepository;
 use Bishopm\Bookclub\Repositories\BooksRepository;
 use App\Http\Controllers\Controller;
@@ -35,14 +37,32 @@ class BooksController extends Controller
         return $this->book->all();
     }
 
+    public function search(Request $request)
+    {
+        return $this->book->all($request->search);
+    }
+
+    public function genre($tag)
+    {
+        return Book::with('author')->whereTag($tag)->orderBy('title')->get();
+    }
+
     /**
      * Display an individual resource.
      *
      * @return Response
      */
-    public function show($id)
+    public function show($id, $user_id=0)
     {
-        return $this->book->find($id);
+        $book = $this->book->find($id);
+        $book->unrated = "1";
+        $book->avg=$book->averageRate();
+        foreach ($book->comments as $comment) {
+            if (($comment->rate > 0) and ($comment->commented_id==$user_id)) {
+                $book->unrated=0;
+            }
+        }
+        return $book;
     }
 
     /**
@@ -58,7 +78,32 @@ class BooksController extends Controller
             $author=$this->author->create(['author' => $request->newauthor]);
             $request->merge(['author_id' => $author->id]);
         }
-        return $this->book->create($request->except('newauthor'));
+        $book = $this->book->create($request->except('newauthor', 'genres'));
+        $genres=array();
+        foreach ($request->genres as $genre) {
+            $genres[]=$genre->name;
+        }
+        $book->tag($genres);
+        return $book;
+    }
+
+    public function addcomment(Request $request)
+    {
+        $book = Book::find($request->book_id);
+        $user = User::find($request->user_id);
+        $user->comment($book, $request->comment, $request->rating);
+        return $request->newcomment;
+    }
+
+    public function deletecomment($id)
+    {
+        $comment = Comment::find($id);
+        $comment->delete();
+    }
+
+    public function alltags()
+    {
+        return Book::allTags()->get();
     }
 
     /**
@@ -68,9 +113,23 @@ class BooksController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function update(Book $book, Request $request)
+    public function update($id, Request $request)
     {
-        $book = $this->book->update($book, $request->all());
+        if ($request->author_id < 0) {
+            $author=$this->author->create(['author' => $request->newauthor]);
+            $request->merge(['author_id' => $author->id]);
+        }
+        $book = Book::find($id);
+        $book->title=$request->title;
+        $book->author_id=$request->author_id;
+        $book->description=$request->description;
+        $book->save();
+        $book->untag();
+        $genres=array();
+        foreach ($request->genres as $genre) {
+            $genres[] = $genre['name'];
+        }
+        $book->tag($genres);
         return $book;
     }
 

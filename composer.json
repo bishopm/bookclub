@@ -22,7 +22,6 @@
         "laravel/socialite": "3.*",
         "laracasts/flash": "3.*",
         "cartalyst/tags": "6.*",
-        "jrean/laravel-user-verification": "dev-master",
         "guzzlehttp/guzzle": "6.*",
         "spatie/laravel-permission": "2.*",
         "tymon/jwt-auth": "1.*",

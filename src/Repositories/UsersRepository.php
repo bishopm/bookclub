@@ -8,4 +8,9 @@ class UsersRepository extends EloquentBaseRepository
     {
         return $this->model->with('loans.book')->find($id);
     }
+
+    public function all()
+    {
+        return $this->model->with('accounts')->get();
+    }
 }

@@ -1,16 +1,35 @@
 <?php namespace Bishopm\Bookclub\Repositories;
 
 use Bishopm\Bookclub\Repositories\EloquentBaseRepository;
+use Bishopm\Bookclub\Models\Loan;
+use Bishopm\Bookclub\Models\User;
+use Bishopm\Bookclub\Models\Book;
 
 class BooksRepository extends EloquentBaseRepository
 {
-    public function all()
+    public function all($search='')
     {
-        return $this->model->with('author', 'loans.user')->orderBy('title')->get();
+        if ($search==''){
+            $books = $this->model->with('author', 'loans.user')->orderBy('title')->get();
+        } else {
+            $books = Book::with('author', 'loans.user')->where('title','like','%' . $search . '%')->orderBy('title')->get();
+        }
+        foreach ($books as $book) {
+            $loan = Loan::with('user')->where('book_id', $book->id)->whereNull('returndate')->first();
+            $book->status = $loan;
+            $book->avg = $book->averageRate();
+        }
+        return $books;
     }
 
     public function find($id)
     {
-        return $this->model->with('author')->find($id);
+        $book = $this->model->with('author', 'loans.user', 'comments', 'tags')->find($id);
+        $loan = Loan::with('user')->where('book_id', $book->id)->whereNull('returndate')->first();
+        $book->status = $loan;
+        foreach ($book->comments as $comment) {
+            $comment->user = User::find($comment->commented_id);
+        }
+        return $book;
     }
 }

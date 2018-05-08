@@ -32,6 +32,11 @@ class AuthorsController extends Controller
         return $this->author->all();
     }
 
+    public function search(Request $request)
+    {
+        return $this->author->all($request->search);
+    }
+
     /**
      * Display an individual resource.
      *

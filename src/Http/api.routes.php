@@ -3,27 +3,34 @@
 Route::middleware(['handlecors'])->group(function () {
     
     // Authentication
-    Route::post('/api/login', ['uses'=>'Bishopm\Bookclub\Http\Controllers\Auth\ApiAuthController@login','as'=>'api.login']);
-    Route::post('/api/password/email', ['uses'=>'Bishopm\Bookclub\Http\Controllers\Auth\ApiAuthController@sendResetLinkEmail','as'=>'api.sendResetLinkEmail']);
-    Route::get('/api/newuser/checkname/{username}', ['uses'=>'Bishopm\Bookclub\Http\Controllers\WebController@checkname','as'=>'api.checkname']);
-    Route::get('/api/getusername/{email}', ['uses'=>'Bishopm\Bookclub\Http\Controllers\WebController@getusername','as'=>'api.getusername']);
-    Route::post('/api/checkmail', ['uses'=>'Bishopm\Bookclub\Http\Controllers\IndividualsController@checkEmail','as'=>'api.checkmail']);
-    Route::post('/api/register', ['uses'=>'Bishopm\Bookclub\Http\Controllers\Auth\RegisterController@register','as'=>'api.register']);
+    Route::post('/login', ['uses'=>'Bishopm\Bookclub\Http\Controllers\UsersController@login','as'=>'api.login']);
 
     // Authors
     Route::get('/authors', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@index','as' => 'api.authors.index']);
+    Route::post('/authors/search/{query?}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@search','as' => 'api.authors.search']);
     Route::get('/authors/{book}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@show','as' => 'api.authors.show']);
 
     // Books
     Route::get('/books', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@index','as' => 'api.books.index']);
+    Route::post('/books/search/{query?}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@search','as' => 'api.books.search']);
     Route::post('/books/add', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@store','as' => 'api.books.store']);
-    Route::get('/books/{book}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@show','as' => 'api.books.show']);
+    Route::post('/books/update/{book}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@update','as' => 'api.books.update']);
+    Route::post('/books/addcomment', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@addcomment','as' => 'api.books.addcomment']);
+    Route::post('/books/deletecomment/{comment}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@deletecomment','as' => 'api.books.deletecomment']);
+    Route::get('/books/alltags', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@alltags','as' => 'api.books.alltags']);
+    Route::get('/books/{book}/{user?}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@show','as' => 'api.books.show']);
+
+    // Genre
+    Route::get('/genre/{genre}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@genre','as' => 'api.books.genre']);
 
     // Loans
     Route::get('/loans', ['uses' => 'Bishopm\Bookclub\Http\Controllers\LoansController@index','as' => 'api.loans.index']);
+    Route::post('/loans/add', ['uses' => 'Bishopm\Bookclub\Http\Controllers\LoansController@store','as' => 'api.loans.store']);
+    Route::post('/loans/update', ['uses' => 'Bishopm\Bookclub\Http\Controllers\LoansController@update','as' => 'api.loans.update']);
     Route::get('/loans/{loan}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\LoansController@show','as' => 'api.loans.show']);
 
     // Users
     Route::get('/users', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@index','as' => 'api.users.index']);
     Route::get('/users/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@show','as' => 'api.users.show']);
+    Route::post('/users/authorise/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@authorise','as' => 'api.users.authorise']);
 });

@@ -61,10 +61,11 @@ class LoansController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function update(Loan $loan, Request $request)
+    public function update(Request $request)
     {
-        $loan = $this->loan->update($loan, $request->all());
-        return $loan;
+        $loan = Loan::find($request->id);
+        $updatedloan = $this->loan->update($loan, ['returndate'=>$request->returndate]);
+        return $updatedloan;
     }
 
     /**
