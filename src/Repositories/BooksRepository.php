@@ -10,14 +10,24 @@ class BooksRepository extends EloquentBaseRepository
     public function all($search='')
     {
         if ($search==''){
-            $books = $this->model->with('author', 'loans.user')->orderBy('title')->get();
+            $books = $this->model->with('author', 'loans.user', 'comments')->orderBy('title')->get();
         } else {
             $books = Book::with('author', 'loans.user')->where('title','like','%' . $search . '%')->orderBy('title')->get();
         }
         foreach ($books as $book) {
             $loan = Loan::with('user')->where('book_id', $book->id)->whereNull('returndate')->first();
             $book->status = $loan;
-            $book->avg = $book->averageRate();
+            $tot = 0;
+            $rates = 0;
+            foreach ($book->comments as $comment){
+                if ($comment->rate){
+                    $tot++;
+                    $rates = $rates + $comment->rate;
+                }
+            }
+            if ($tot){
+                $book->avg = round($rates / $tot);
+            }
         }
         return $books;
     }
@@ -31,5 +41,23 @@ class BooksRepository extends EloquentBaseRepository
             $comment->user = User::find($comment->commented_id);
         }
         return $book;
+    }
+
+    public function avg($id)
+    {
+        $book = $this->model->with('comments')->find($id);
+        $tot = 0;
+        $rates = 0;
+        foreach ($book->comments as $comment){
+            if ($comment->rate){
+                $tot++;
+                $rates = $rates + $comment->rate;
+            }
+        }
+        if ($tot){
+            return round($rates / $tot);
+        } else {
+            return null;
+        }
     }
 }

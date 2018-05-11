@@ -24,4 +24,5 @@ class Book extends Model implements TaggableInterface
     {
         return $this->hasMany('Bishopm\Bookclub\Models\Loan');
     }
+    
 }

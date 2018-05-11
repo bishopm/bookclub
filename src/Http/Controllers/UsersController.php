@@ -5,8 +5,11 @@ namespace Bishopm\Bookclub\Http\Controllers;
 use Auth;
 use JWTAuth;
 use Bishopm\Bookclub\Models\User;
+use Bishopm\Bookclub\Models\Book;
 use Bishopm\Bookclub\Models\LinkedSocialAccount;
 use Bishopm\Bookclub\Repositories\UsersRepository;
+use Bishopm\Bookclub\Repositories\BooksRepository;
+use Actuallymab\LaravelComment\Models\Comment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
@@ -16,11 +19,12 @@ class UsersController extends Controller
     /**
      * @var UserRepository
      */
-    private $user;
+    private $user, $book;
 
-    public function __construct(UsersRepository $user)
+    public function __construct(UsersRepository $user, BooksRepository $book)
     {
         $this->user = $user;
+        $this->book = $book;
     }
 
     /**
@@ -46,6 +50,9 @@ class UsersController extends Controller
         } else {
             $user = User::create(['name' => $request->name, 'authorised'=>0]);
             $user->image = $request->image;
+            if ($user->id==1) {
+                $user->authorised=1;
+            }
             $user->save();
             $user->accounts()->create(['provider_name'=>$request->provider,'provider_id'=>$request->provider_id]);
             return $user;
@@ -60,6 +67,15 @@ class UsersController extends Controller
     public function show($id)
     {
         return $this->user->find($id);
+    }
+
+    public function home($id)
+    {
+        $data['books'] = Book::all()->count();
+        $data['users'] = User::all()->count();
+        $data['comments'] = Comment::all()->count();
+        $data['user'] = $this->user->find($id);
+        return $data;
     }
 
     /**

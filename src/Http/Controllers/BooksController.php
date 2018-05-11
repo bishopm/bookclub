@@ -56,7 +56,7 @@ class BooksController extends Controller
     {
         $book = $this->book->find($id);
         $book->unrated = "1";
-        $book->avg=$book->averageRate();
+        $book->avg=$this->book->avg($id);
         foreach ($book->comments as $comment) {
             if (($comment->rate > 0) and ($comment->commented_id==$user_id)) {
                 $book->unrated=0;
