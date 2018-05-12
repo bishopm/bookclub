@@ -1,9 +1,7 @@
 <?php
-
-Route::get('/home/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@home','as' => 'api.users.home']);
 Route::post('login', 'Bishopm\Bookclub\Http\Controllers\AuthController@login');
 Route::post('/users/register', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@register','as' => 'api.users.register']);
-Route::middleware(['handlecors','api'])->group(function () {
+Route::middleware(['handlecors','api','jwt.auth'])->group(function () {
     // Authentication
     Route::post('logout', 'Bishopm\Bookclub\Http\Controllers\AuthController@logout');
     Route::post('refresh', 'Bishopm\Bookclub\Http\Controllers\AuthController@refresh');
@@ -37,4 +35,5 @@ Route::middleware(['handlecors','api'])->group(function () {
     Route::get('/users', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@index','as' => 'api.users.index']);
     Route::get('/users/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@show','as' => 'api.users.show']);
     Route::post('/users/authorise/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@authorise','as' => 'api.users.authorise']);
+    Route::get('/home/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@home','as' => 'api.users.home']);
 });
