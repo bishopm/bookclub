@@ -19,7 +19,8 @@ class UsersController extends Controller
     /**
      * @var UserRepository
      */
-    private $user, $book;
+    private $user;
+    private $book;
 
     public function __construct(UsersRepository $user, BooksRepository $book)
     {
@@ -42,21 +43,14 @@ class UsersController extends Controller
      *
      * @return Response
      */
-    public function login(Request $request)
+    public function register(Request $request)
     {
-        $account = LinkedSocialAccount::where('provider_name', $request->provider)->where('provider_id', $request->provider_id)->first();
-        if ($account) {
-            return User::with('accounts')->find($account->user_id);
-        } else {
-            $user = User::create(['name' => $request->name, 'authorised'=>0]);
-            $user->image = $request->image;
-            if ($user->id==1) {
-                $user->authorised=1;
-            }
-            $user->save();
-            $user->accounts()->create(['provider_name'=>$request->provider,'provider_id'=>$request->provider_id]);
-            return $user;
+        $user = User::create(['email' => $request->email, 'name' => $request->name, 'password' => bcrypt($request->password), 'authorised'=>0]);
+        if ($user->id==1) {
+            $user->authorised=1;
         }
+        $user->save();
+        return $user;
     }
 
     /**

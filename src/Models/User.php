@@ -39,9 +39,4 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany('Bishopm\Bookclub\Models\Loan');
     }
-
-    public function accounts()
-    {
-        return $this->hasMany('Bishopm\Bookclub\Models\LinkedSocialAccount');
-    }
 }

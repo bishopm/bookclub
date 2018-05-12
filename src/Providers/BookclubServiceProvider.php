@@ -36,6 +36,8 @@ class BookclubServiceProvider extends ServiceProvider
         config(['auth.providers.users.model'=>'Bishopm\Bookclub\Models\User']);
         config(['auth.defaults.guard'=>'api']);
         config(['auth.guards.api.driver'=>'jwt']);
+        config(['jwt.ttl' => 525600]);
+        config(['jwt.refresh_ttl' => 525600]);
         if (Schema::hasTable('settings')) {
             /*$finset=$settings->makearray();
             if (($settings->getkey('site_name'))<>"Invalid") {

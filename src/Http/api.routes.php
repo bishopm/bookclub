@@ -1,13 +1,13 @@
 <?php
 
-Route::middleware(['handlecors'])->group(function () {
+Route::get('/home/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@home','as' => 'api.users.home']);
+Route::post('login', 'Bishopm\Bookclub\Http\Controllers\AuthController@login');
+Route::post('/users/register', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@register','as' => 'api.users.register']);
+Route::middleware(['handlecors','api'])->group(function () {
     // Authentication
-    Route::middleware(['api'])->group(function () {
-        Route::post('login', 'Bishopm\Bookclub\Http\Controllers\AuthController@login');
-        Route::post('logout', 'Bishopm\Bookclub\Http\Controllers\AuthController@logout');
-        Route::post('refresh', 'Bishopm\Bookclub\Http\Controllers\AuthController@refresh');
-        Route::post('me', 'Bishopm\Bookclub\Http\Controllers\AuthController@me');
-    });
+    Route::post('logout', 'Bishopm\Bookclub\Http\Controllers\AuthController@logout');
+    Route::post('refresh', 'Bishopm\Bookclub\Http\Controllers\AuthController@refresh');
+    Route::post('me', 'Bishopm\Bookclub\Http\Controllers\AuthController@me');
 
     // Authors
     Route::get('/authors', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@index','as' => 'api.authors.index']);
@@ -37,7 +37,4 @@ Route::middleware(['handlecors'])->group(function () {
     Route::get('/users', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@index','as' => 'api.users.index']);
     Route::get('/users/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@show','as' => 'api.users.show']);
     Route::post('/users/authorise/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@authorise','as' => 'api.users.authorise']);
-
-    // Home
-    Route::get('/home/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@home','as' => 'api.users.home']);
 });

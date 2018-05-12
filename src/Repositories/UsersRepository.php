@@ -11,6 +11,6 @@ class UsersRepository extends EloquentBaseRepository
 
     public function all()
     {
-        return $this->model->with('accounts')->get();
+        return $this->model->get();
     }
 }

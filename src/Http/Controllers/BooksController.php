@@ -23,6 +23,7 @@ class BooksController extends Controller
 
     public function __construct(BooksRepository $book, AuthorsRepository $author)
     {
+        $this->middleware('auth:api');
         $this->book = $book;
         $this->author = $author;
     }
