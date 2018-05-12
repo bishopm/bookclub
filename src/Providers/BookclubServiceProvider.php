@@ -34,12 +34,8 @@ class BookclubServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../Database/migrations');
         $this->publishes([__DIR__.'/../Assets' => public_path('vendor/bishopm'),], 'public');
         config(['auth.providers.users.model'=>'Bishopm\Bookclub\Models\User']);
-        config(['services.facebook.client_id'=> 'fbid']);
-        config(['services.facebook.client_secret'=> 'fbsecret']);
-        config(['services.facebook.redirect'=> 'fbredirect']);
-        config(['services.google.client_id'=> '515373439888-fo6i9e0dabkiajml7ussult21fld9g82.apps.googleusercontent.com']);
-        config(['services.google.client_secret'=> 'J9L6D-IXdxUJTY0Vx_RDqxlJ']);
-        config(['services.google.redirect'=> 'http://localhost/bookclub/public/login/google/callback']);
+        config(['auth.defaults.guard'=>'api']);
+        config(['auth.guards.api.driver'=>'jwt']);
         if (Schema::hasTable('settings')) {
             /*$finset=$settings->makearray();
             if (($settings->getkey('site_name'))<>"Invalid") {
@@ -63,7 +59,6 @@ class BookclubServiceProvider extends ServiceProvider
         AliasLoader::getInstance()->alias("Socialite", 'Laravel\Socialite\Facades\Socialite');
         AliasLoader::getInstance()->alias("JWTFactory", 'Tymon\JWTAuth\Facades\JWTFactory');
         AliasLoader::getInstance()->alias("JWTAuth", 'Tymon\JWTAuth\Facades\JWTAuth');
-        AliasLoader::getInstance()->alias("UserVerification", 'Jrean\UserVerification\Facades\UserVerification');
         AliasLoader::getInstance()->alias("Form", 'Collective\Html\FormFacade');
         AliasLoader::getInstance()->alias("HTML", 'Collective\Html\HtmlFacade');
         $this->app['router']->aliasMiddleware('isverified', 'Bishopm\Bookclub\Middleware\IsVerified');

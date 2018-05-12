@@ -1,9 +1,13 @@
 <?php
 
 Route::middleware(['handlecors'])->group(function () {
-    
     // Authentication
-    Route::post('/login', ['uses'=>'Bishopm\Bookclub\Http\Controllers\UsersController@login','as'=>'api.login']);
+    Route::middleware(['api'])->group(function () {
+        Route::post('login', 'Bishopm\Bookclub\Http\Controllers\AuthController@login');
+        Route::post('logout', 'Bishopm\Bookclub\Http\Controllers\AuthController@logout');
+        Route::post('refresh', 'Bishopm\Bookclub\Http\Controllers\AuthController@refresh');
+        Route::post('me', 'Bishopm\Bookclub\Http\Controllers\AuthController@me');
+    });
 
     // Authors
     Route::get('/authors', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@index','as' => 'api.authors.index']);
