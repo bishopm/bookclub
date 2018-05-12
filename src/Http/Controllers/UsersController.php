@@ -103,9 +103,8 @@ class UsersController extends Controller
         if ($request->action == "authorise") {
             return $this->user->update($user, ['authorised'=>1]);
         } elseif ($request->action == "delete") {
-            return "deleting";
+            $user->delete();
         }
-        return $user;
     }
 
     /**

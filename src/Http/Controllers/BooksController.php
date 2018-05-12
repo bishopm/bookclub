@@ -134,6 +134,13 @@ class BooksController extends Controller
         return $book;
     }
 
+    public function delete($id, Request $request)
+    {
+        $book = Book::find($id);
+        $book->delete();
+        return "deleted";
+    }
+
     /**
      * Remove the specified resource from storage.
      *
