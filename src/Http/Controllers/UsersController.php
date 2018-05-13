@@ -66,6 +66,7 @@ class UsersController extends Controller
     public function home($id)
     {
         $data['books'] = Book::all()->count();
+        $data['toprated'] = $this->book->toprated();
         $data['users'] = User::all()->count();
         $data['comments'] = Comment::all()->count();
         $data['user'] = $this->user->find($id);
