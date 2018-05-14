@@ -7,6 +7,7 @@ use JWTAuth;
 use Bishopm\Bookclub\Models\Book;
 use Bishopm\Bookclub\Models\User;
 use Actuallymab\LaravelComment\Models\Comment;
+use Cartalyst\Tags\IlluminateTag;
 use Bishopm\Bookclub\Repositories\AuthorsRepository;
 use Bishopm\Bookclub\Repositories\BooksRepository;
 use App\Http\Controllers\Controller;
@@ -46,6 +47,11 @@ class BooksController extends Controller
     public function genre($tag)
     {
         return Book::with('author')->whereTag($tag)->orderBy('title')->get();
+    }
+
+    public function comments()
+    {
+        return Comment::with('commented', 'commentable')->orderBy('created_at', 'DESC')->get();
     }
 
     /**
@@ -104,7 +110,13 @@ class BooksController extends Controller
 
     public function alltags()
     {
-        return Book::allTags()->get();
+        $tags = IlluminateTag::all();
+        foreach ($tags as $tag) {
+            if ($tag->count == 0) {
+                $del = IlluminateTag::find($tag->id)->delete();
+            }
+        }
+        return IlluminateTag::all();
     }
 
     /**
@@ -137,6 +149,13 @@ class BooksController extends Controller
     public function delete($id, Request $request)
     {
         $book = Book::find($id);
+        $book->untag();
+        foreach ($book->comments as $comment) {
+            $comment->delete();
+        }
+        foreach ($book->loans as $loan) {
+            $loan->delete();
+        }
         $book->delete();
         return "deleted";
     }

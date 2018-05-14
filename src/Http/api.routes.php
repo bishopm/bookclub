@@ -23,6 +23,9 @@ Route::middleware(['handlecors','api','jwt.auth'])->group(function () {
     Route::get('/books/alltags', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@alltags','as' => 'api.books.alltags']);
     Route::get('/books/{book}/{user?}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@show','as' => 'api.books.show']);
 
+    // Comments
+    Route::get('/comments', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@comments','as' => 'api.comments.index']);
+
     // Genre
     Route::get('/genre/{genre}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@genre','as' => 'api.books.genre']);
 
