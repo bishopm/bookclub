@@ -9,10 +9,10 @@ class AuthorsRepository extends EloquentBaseRepository
 {
     public function all($search='')
     {
-        if ($search==''){
-            $author = $this->model->with('books')->orderBy('author')->get();
+        if ($search=='') {
+            $author = $this->model->with('books')->orderBy('surname', 'firstname')->get();
         } else {
-            $author = Author::with('books')->where('author','like','%' . $search . '%')->orderBy('author')->get();
+            $author = Author::with('books')->where('author', 'like', '%' . $search . '%')->orderBy('surname', 'firstname')->get();
         }
         return $author;
     }

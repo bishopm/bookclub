@@ -17,12 +17,11 @@ class Book extends Model implements TaggableInterface
 
     public function author()
     {
-        return $this->belongsTo('Bishopm\Bookclub\Models\Author');
+        return $this->belongsToMany('Bishopm\Bookclub\Models\Author');
     }
 
     public function loans()
     {
         return $this->hasMany('Bishopm\Bookclub\Models\Loan');
     }
-    
 }

@@ -65,6 +65,7 @@ class BooksRepository extends EloquentBaseRepository
     {
         $books=$this->model->with('comments')->get();
         $fin=array();
+        $dat=array();
         foreach ($books as $book) {
             $avg=$this->avg($book->id);
             if ($avg) {
