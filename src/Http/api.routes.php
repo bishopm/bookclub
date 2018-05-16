@@ -10,6 +10,7 @@ Route::middleware(['handlecors','api','jwt.auth'])->group(function () {
     // Authors
     Route::get('/authors', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@index','as' => 'api.authors.index']);
     Route::post('/authors/search/{query?}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@search','as' => 'api.authors.search']);
+    Route::post('/authors', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@check','as' => 'api.authors.check']);
     Route::get('/authors/{book}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@show','as' => 'api.authors.show']);
 
     // Books
