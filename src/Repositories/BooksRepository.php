@@ -10,9 +10,9 @@ class BooksRepository extends EloquentBaseRepository
     public function all($search='')
     {
         if ($search=='') {
-            $books = $this->model->with('author', 'loans.user', 'comments')->orderBy('title')->get();
+            $books = $this->model->with('authors', 'loans.user', 'comments')->orderBy('title')->get();
         } else {
-            $books = Book::with('author', 'loans.user')->where('title', 'like', '%' . $search . '%')->orderBy('title')->get();
+            $books = Book::with('authors', 'loans.user')->where('title', 'like', '%' . $search . '%')->orderBy('title')->get();
         }
         foreach ($books as $book) {
             $loan = Loan::with('user')->where('book_id', $book->id)->whereNull('returndate')->first();
@@ -34,7 +34,7 @@ class BooksRepository extends EloquentBaseRepository
 
     public function find($id)
     {
-        $book = $this->model->with('author', 'loans.user', 'comments', 'tags')->find($id);
+        $book = $this->model->with('authors', 'loans.user', 'comments', 'tags')->find($id);
         $loan = Loan::with('user')->where('book_id', $book->id)->whereNull('returndate')->first();
         $book->status = $loan;
         foreach ($book->comments as $comment) {
@@ -65,7 +65,6 @@ class BooksRepository extends EloquentBaseRepository
     {
         $books=$this->model->with('comments')->get();
         $fin=array();
-        $dat=array();
         foreach ($books as $book) {
             $avg=$this->avg($book->id);
             if ($avg) {

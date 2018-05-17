@@ -15,7 +15,7 @@ class Book extends Model implements TaggableInterface
     protected $canBeRated = true;
     protected $mustBeApproved = false;
 
-    public function author()
+    public function authors()
     {
         return $this->belongsToMany('Bishopm\Bookclub\Models\Author');
     }

@@ -20,13 +20,13 @@ class BooksController extends Controller
      * @var BookRepository
      */
     private $book;
-    private $author;
+    private $authors;
 
-    public function __construct(BooksRepository $book, AuthorsRepository $author)
+    public function __construct(BooksRepository $book, AuthorsRepository $authors)
     {
         $this->middleware('auth:api');
         $this->book = $book;
-        $this->author = $author;
+        $this->authors = $authors;
     }
 
     /**
@@ -46,7 +46,7 @@ class BooksController extends Controller
 
     public function genre($tag)
     {
-        return Book::with('author')->whereTag($tag)->orderBy('title')->get();
+        return Book::with('authors')->whereTag($tag)->orderBy('title')->get();
     }
 
     public function comments()
@@ -81,16 +81,15 @@ class BooksController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->author_id < 0) {
-            $author=$this->author->create(['author' => $request->newauthor]);
-            $request->merge(['author_id' => $author->id]);
-        }
-        $book = $this->book->create($request->except('newauthor', 'genres'));
+        $book = $this->book->create($request->except('authors', 'genres'));
         $genres=array();
         foreach ($request->genres as $genre) {
-            $genres[]=$genre->name;
+            $genres[]=$genre['name'];
         }
         $book->tag($genres);
+        foreach ($request->authors as $author) {
+            $book->authors()->attach($author['value']);
+        }
         return $book;
     }
 
@@ -128,13 +127,10 @@ class BooksController extends Controller
      */
     public function update($id, Request $request)
     {
-        if ($request->author_id < 0) {
-            $author=$this->author->create(['author' => $request->newauthor]);
-            $request->merge(['author_id' => $author->id]);
-        }
         $book = Book::find($id);
         $book->title=$request->title;
-        $book->author_id=$request->author_id;
+        $book->image=$request->image;
+        $book->isbn=$request->isbn;
         $book->description=$request->description;
         $book->save();
         $book->untag();
@@ -143,6 +139,11 @@ class BooksController extends Controller
             $genres[] = $genre['name'];
         }
         $book->tag($genres);
+        $adat=array();
+        foreach ($request->authors as $author) {
+            $adat[]=$author['value'];
+        }
+        $book->authors()->sync($adat);
         return $book;
     }
 

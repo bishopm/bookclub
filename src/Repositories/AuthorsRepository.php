@@ -11,9 +11,9 @@ class AuthorsRepository extends EloquentBaseRepository
     public function all($search='')
     {
         if ($search=='') {
-            $author = $this->model->with('books')->orderBy('surname', 'firstname')->get();
+            $author = $this->model->with('books')->orderBy('surname')->orderBy('firstname')->get();
         } else {
-            $author = Author::with('books')->where('author', 'like', '%' . $search . '%')->orderBy('surname', 'firstname')->get();
+            $author = Author::with('books')->where('author', 'like', '%' . $search . '%')->orderBy('surname')->orderBy('firstname')->get();
         }
         return $author;
     }
@@ -33,18 +33,16 @@ class AuthorsRepository extends EloquentBaseRepository
     {
         $adata=array();
         $author = $this->model->whereRaw("CONCAT(firstname, ' ', surname) = ?", [$name])->first();
-        if (count($author)) {
-            $adata['value']= $author->id;
-            $adata['label']= $author->surname . ", " . $author->firstname;
-            $adata['type']="Existing";
+        if ($author) {
+            $adata['existing']['value']= $author->id;
+            $adata['existing']['label']= $author->surname . ", " . $author->firstname;
         } else {
             $names = explode(' ', $name);
             $firstname = array_shift($names);
             $surname = implode(' ', $names);
             $newauthor = Author::create(['firstname'=>$firstname, 'surname'=>$surname]);
-            $adata['value']= $newauthor->id;
-            $adata['label']= $newauthor->surname . ", " . $newauthor->firstname;
-            $adata['type']="New";
+            $adata['new']['value']= $newauthor->id;
+            $adata['new']['label']= $newauthor->surname . ", " . $newauthor->firstname;
         }
         return $adata;
     }
