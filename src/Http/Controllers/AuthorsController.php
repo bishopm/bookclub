@@ -71,10 +71,20 @@ class AuthorsController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function update(Author $author, Request $request)
+    public function update($id, Request $request)
     {
-        $author = $this->author->update($author, $request->all());
+        $author = Author::find($id);
+        $author->firstname=$request->firstname;
+        $author->surname=$request->surname;
+        $author->save();
         return $author;
+    }
+
+    public function delete($id, Request $request)
+    {
+        $author = Author::find($id);
+        $author->delete();
+        return "deleted";
     }
 
     /**
