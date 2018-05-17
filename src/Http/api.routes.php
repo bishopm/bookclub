@@ -13,7 +13,7 @@ Route::middleware(['handlecors','api','jwt.auth'])->group(function () {
     Route::post('/authors', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@check','as' => 'api.authors.check']);
     Route::post('/authors/update/{author}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@update','as' => 'api.authors.update']);
     Route::post('/authors/delete/{author}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@delete','as' => 'api.authors.delete']);
-    Route::get('/authors/{book}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@show','as' => 'api.authors.show']);
+    Route::get('/authors/{author}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\AuthorsController@show','as' => 'api.authors.show']);
 
     // Books
     Route::get('/books', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@index','as' => 'api.books.index']);
