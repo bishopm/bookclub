@@ -88,7 +88,12 @@ class BooksController extends Controller
         }
         $book->tag($genres);
         foreach ($request->authors as $author) {
-            $book->authors()->attach($author['value']);
+            if ($author['code']<1) {
+                $newauthor=$this->authors->check($author['label']);
+                $book->authors()->attach($newauthor['new']['value']);
+            } else {
+                $book->authors()->attach($author['value']);
+            }
         }
         return $book;
     }
