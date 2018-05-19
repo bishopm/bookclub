@@ -35,14 +35,14 @@ class AuthorsRepository extends EloquentBaseRepository
         $author = $this->model->whereRaw("CONCAT(firstname, ' ', surname) = ?", [$name])->first();
         if ($author) {
             $adata['existing']['value']= $author->id;
-            $adata['existing']['label']= $author->surname . ", " . $author->firstname;
+            $adata['existing']['name']= $author->surname . ", " . $author->firstname;
         } else {
             $names = explode(' ', $name);
             $firstname = array_shift($names);
             $surname = implode(' ', $names);
             $newauthor = Author::create(['firstname'=>$firstname, 'surname'=>$surname]);
             $adata['new']['value']= $newauthor->id;
-            $adata['new']['label']= $newauthor->surname . ", " . $newauthor->firstname;
+            $adata['new']['name']= $newauthor->surname . ", " . $newauthor->firstname;
         }
         return $adata;
     }
