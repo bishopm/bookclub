@@ -17,6 +17,7 @@ Route::middleware(['handlecors','api','jwt.auth'])->group(function () {
 
     // Books
     Route::get('/books', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@index','as' => 'api.books.index']);
+    Route::get('/books/wishlist', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@wishlist','as' => 'api.books.wishlist']);
     Route::post('/books/search/{query?}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@search','as' => 'api.books.search']);
     Route::post('/books/add', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@store','as' => 'api.books.store']);
     Route::post('/books/update/{book}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\BooksController@update','as' => 'api.books.update']);

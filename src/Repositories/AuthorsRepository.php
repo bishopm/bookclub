@@ -11,16 +11,20 @@ class AuthorsRepository extends EloquentBaseRepository
     public function all($search='')
     {
         if ($search=='') {
-            $author = $this->model->with('books')->orderBy('surname')->orderBy('firstname')->get();
+            $authors = Author::with(['books' => function ($query) {
+                $query->where('owned', '=', 1);
+            }])->orderBy('surname')->orderBy('firstname')->get();
         } else {
-            $author = Author::with('books')->where('author', 'like', '%' . $search . '%')->orderBy('surname')->orderBy('firstname')->get();
+            $authors = Author::with('books')->where('author', 'like', '%' . $search . '%')->orderBy('surname')->orderBy('firstname')->get();
         }
-        return $author;
+        return $authors;
     }
 
     public function find($id)
     {
-        $author = $this->model->with('books')->find($id);
+        $author = $this->model->with(['books' => function ($query) {
+            $query->where('owned', '=', 1);
+        }])->find($id);
         foreach ($author->books as $book) {
             $loan = Loan::with('user')->where('book_id', $book->id)->whereNull('returndate')->first();
             $book->status = $loan;

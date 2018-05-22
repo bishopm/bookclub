@@ -10,9 +10,9 @@ class BooksRepository extends EloquentBaseRepository
     public function all($search='')
     {
         if ($search=='') {
-            $books = $this->model->with('authors', 'loans.user', 'comments')->orderBy('title')->get();
+            $books = $this->model->with('authors', 'loans.user', 'comments')->where('owned', 1)->orderBy('title')->get();
         } else {
-            $books = Book::with('authors', 'loans.user')->where('title', 'like', '%' . $search . '%')->orderBy('title')->get();
+            $books = Book::with('authors', 'loans.user')->where('title', 'like', '%' . $search . '%')->where('owned', 1)->orderBy('title')->get();
         }
         foreach ($books as $book) {
             $loan = Loan::with('user')->where('book_id', $book->id)->whereNull('returndate')->first();
@@ -29,6 +29,12 @@ class BooksRepository extends EloquentBaseRepository
                 $book->avg = round($rates / $tot);
             }
         }
+        return $books;
+    }
+
+    public function wishlist()
+    {
+        $books = $this->model->with('authors')->where('owned', 0)->orderBy('title')->get();
         return $books;
     }
 
@@ -63,7 +69,7 @@ class BooksRepository extends EloquentBaseRepository
 
     public function toprated()
     {
-        $books=$this->model->with('comments')->get();
+        $books=$this->model->where('owned', 1)->with('comments')->get();
         $fin=array();
         $dat=array();
         foreach ($books as $book) {

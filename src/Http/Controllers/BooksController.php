@@ -39,6 +39,11 @@ class BooksController extends Controller
         return $this->book->all();
     }
 
+    public function wishlist()
+    {
+        return $this->book->wishlist();
+    }
+
     public function search(Request $request)
     {
         return $this->book->all($request->search);
@@ -137,6 +142,7 @@ class BooksController extends Controller
         $book->image=$request->image;
         $book->isbn=$request->isbn;
         $book->description=$request->description;
+        $book->owned=$request->owned;
         $book->save();
         $book->untag();
         $genres=array();
