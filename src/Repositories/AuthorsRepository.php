@@ -12,7 +12,7 @@ class AuthorsRepository extends EloquentBaseRepository
     {
         if ($search=='') {
             $authors = Author::with(['books' => function ($query) {
-                $query->where('owned', '=', 1);
+                $query->where('owned', '=', 'owned');
             }])->orderBy('surname')->orderBy('firstname')->get();
         } else {
             $authors = Author::with('books')->where('author', 'like', '%' . $search . '%')->orderBy('surname')->orderBy('firstname')->get();
@@ -23,7 +23,7 @@ class AuthorsRepository extends EloquentBaseRepository
     public function find($id)
     {
         $author = $this->model->with(['books' => function ($query) {
-            $query->where('owned', '=', 1);
+            $query->where('owned', '=', 'owned');
         }])->find($id);
         foreach ($author->books as $book) {
             $loan = Loan::with('user')->where('book_id', $book->id)->whereNull('returndate')->first();
