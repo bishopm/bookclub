@@ -86,21 +86,26 @@ class BooksController extends Controller
 
     public function store(Request $request)
     {
-        $book = $this->book->create($request->except('authors', 'genres'));
-        $genres=array();
-        foreach ($request->genres as $genre) {
-            $genres[]=$genre['name'];
-        }
-        $book->tag($genres);
-        foreach ($request->authors as $author) {
-            if ($author['value']<1) {
-                $newauthor=$this->authors->check($author['name']);
-                $book->authors()->attach($newauthor['new']['value']);
-            } else {
-                $book->authors()->attach($author['value']);
+        $existing = Book::where('isbn', $request->isbn)->first();
+        if (count($existing)>0) {
+            return "Existing";
+        } else {
+            $book = $this->book->create($request->except('authors', 'genres'));
+            $genres=array();
+            foreach ($request->genres as $genre) {
+                $genres[]=$genre['name'];
             }
+            $book->tag($genres);
+            foreach ($request->authors as $author) {
+                if ($author['value']<1) {
+                    $newauthor=$this->authors->check($author['name']);
+                    $book->authors()->attach($newauthor['new']['value']);
+                } else {
+                    $book->authors()->attach($author['value']);
+                }
+            }
+            return $book;
         }
-        return $book;
     }
 
     public function addcomment(Request $request)
