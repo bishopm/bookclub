@@ -45,6 +45,7 @@ class UsersController extends Controller
      */
     public function register(Request $request)
     {
+        return "No more!";
         $user = User::create(['email' => $request->email, 'name' => $request->name, 'password' => bcrypt($request->password), 'authorised'=>0]);
         if ($user->id==1) {
             $user->authorised=1;
@@ -92,9 +93,10 @@ class UsersController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function update(User $user, Request $request)
+    public function update($id, Request $request)
     {
-        $user = $this->user->update($user, $request->all());
+        $user = $this->user->find($id);
+        $this->user->update($user, $request->all());
         return $user;
     }
 

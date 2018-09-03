@@ -4,6 +4,10 @@ namespace Bishopm\Bookclub\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Bishopm\Bookclub\Models\User;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -22,15 +26,27 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function login(Request $request)
     {
-        $credentials = request(['email', 'password']);
-
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        $user=User::where('phone', $request->phone)->where('phonetoken', $request->phonetoken)->first();
+        if (!$user) {
+            $user=User::where('phone', $request->phone)->whereNull('phonetoken')->first();
+            if (!$user) {
+                $user = User::create(['firstname'=>$request->phone, 'phone'=>$request->phone, 'phonetoken'=>$request->phonetoken]);
+            } else {
+                $user->phonetoken = $request->phonetoken;
+                $user->save();
+            }
         }
-
-        return $this->respondWithToken($token);
+        try {
+            if (!$token=JWTAuth::fromUser($user)) {
+                return response()->json(['error' => 'invalid_credentials'], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'could_not_create_token'], 500);
+        }
+        $user->token = $token;
+        return $user;
     }
 
     /**

@@ -44,4 +44,6 @@ Route::middleware(['handlecors','api','jwt.auth'])->group(function () {
     Route::get('/users/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@show','as' => 'api.users.show']);
     Route::post('/users/authorise/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@authorise','as' => 'api.users.authorise']);
     Route::get('/home/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@home','as' => 'api.users.home']);
+    Route::post('/users/{user}', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@update','as' => 'api.users.update']);
+    Route::post('/users', ['uses' => 'Bishopm\Bookclub\Http\Controllers\UsersController@store','as' => 'api.users.store']);
 });

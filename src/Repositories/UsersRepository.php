@@ -11,6 +11,6 @@ class UsersRepository extends EloquentBaseRepository
 
     public function all()
     {
-        return $this->model->with('comments')->orderBy('name')->get();
+        return $this->model->with('comments')->orderBy('firstname')->get();
     }
 }

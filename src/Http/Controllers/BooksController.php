@@ -124,13 +124,13 @@ class BooksController extends Controller
 
     public function alltags()
     {
-        $tags = IlluminateTag::all();
+        $tags = IlluminateTag::orderBy('slug')->get();
         foreach ($tags as $tag) {
             if ($tag->count == 0) {
                 $del = IlluminateTag::find($tag->id)->delete();
             }
         }
-        return IlluminateTag::all();
+        return IlluminateTag::orderBy('slug')->get();
     }
 
     /**
