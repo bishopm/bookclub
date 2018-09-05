@@ -15,7 +15,7 @@ class AuthorsRepository extends EloquentBaseRepository
                 $query->where('owned', '=', 'owned');
             }])->orderBy('surname')->orderBy('firstname')->get();
         } else {
-            $authors = Author::with('books')->where('author', 'like', '%' . $search . '%')->orderBy('surname')->orderBy('firstname')->get();
+            $authors = Author::with('books')->where('surname', 'like', '%' . $search . '%')->orWhere('firstname', 'like', '%' . $search . '%')->orderBy('surname')->orderBy('firstname')->get();
         }
         return $authors;
     }
