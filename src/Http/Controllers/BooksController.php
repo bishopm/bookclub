@@ -87,9 +87,7 @@ class BooksController extends Controller
     public function store(Request $request)
     {
         $existing = Book::where('isbn', $request->isbn)->first();
-        if (count($existing)>0) {
-            return "Existing";
-        } else {
+        if (!$existing) {
             $book = $this->book->create($request->except('authors', 'genres'));
             $genres=array();
             foreach ($request->genres as $genre) {
