@@ -51,7 +51,7 @@ class LoansController extends Controller
 
     public function store(Request $request)
     {
-        return $this->loan->create($request->all());
+        return $this->loan->create($request->except('q'));
     }
 
     /**

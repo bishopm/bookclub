@@ -88,7 +88,7 @@ class BooksController extends Controller
     {
         $existing = Book::where('isbn', $request->isbn)->first();
         if (!$existing) {
-            $book = $this->book->create($request->except('authors', 'genres'));
+            $book = $this->book->create($request->except('authors', 'genres', 'q'));
             $genres=array();
             foreach ($request->genres as $genre) {
                 $genres[]=$genre['name'];
